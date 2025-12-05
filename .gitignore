@@ -30,3 +30,6 @@ Thumbs.db
 venv/
 env/
 .env
+
+#probando
+abc.txt
