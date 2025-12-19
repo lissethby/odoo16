@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: postgres
-    restart: always               # se inicia como servicio
+    restart: always           # se inicia como servicio
     volumes:
       - db14-data:/var/lib/postgresql/data
     networks:
@@ -16,18 +16,18 @@ services:
     image: odoo:16
     container_name: odoo16
     depends_on:
-      - db     # el nombre del servicio. Odoo espera a que se inicie
+      - db             # el nombre del servicio. Odoo espera a que se inicie la DB
     environment:
-      HOST: db    # el nombre del servidor, no del contenedor
+      HOST: db         # el nombre del servicio, no del contenedor.
       USER: admin
       PASSWORD: admin
-    ports:                   # Puerto del HOST : puerto del contenedor
-      - "8069:8069"
+    ports:
+      - "8069:8069"   # puerto del HOST : puerto del contenedor
     volumes:
-      - odoo16-data:/var/lib/odoo            # Mapeo del directorio de datos
-      - ./config_odoo:/etc/odoo              # Mapeo del directorio de configuración
-      - ./custom-addons:/mnt/extra-addons    # Mapeo de addons personalizados
-      - ./logs:/var/log/odoo                 # Mapeo de logs
+      - odoo16-data:/var/lib/odoo          # mapeo el directorio de datos de odoo del contenedor.
+      - ./config_odoo:/etc/odoo            # mapeo el directorio de configuración del contenedor.
+      - ./custom-addons:/mnt/extra-addons  # mapeo el directorio local para personalizaciones
+      - ./logs:/var/log/odoo               # mapeo de los log de Odoo
     networks:
       - odoo-net
 
