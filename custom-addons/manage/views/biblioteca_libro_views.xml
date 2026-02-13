@@ -1,0 +1,47 @@
+ <odoo>
+ <!-- Tree view -->
+    <record id="view_biblioteca_libro_tree" model="ir.ui.view">
+        <field name="name">biblioteca.libro.tree</field>
+        <field name="model">biblioteca_escolar.libro</field>
+        <field name="arch" type="xml">
+            <tree string="Listado de los libros de la Biblioteca">
+                <field name="name"/>
+                <field name="author"/>
+                <field name="isbn"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_biblioteca_libro_form" model="ir.ui.view">
+        <field name="name">biblioteca.libro.form</field>
+        <field name="model">biblioteca_escolar.libro</field>
+        <field name="arch" type="xml">
+            <form string="Información del Libro">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="author"/>
+                        <field name="isbn"/>
+                        <field name="state"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_biblioteca_libro" model="ir.actions.act_window">
+        <field name="name">Libros de la biblioteca</field>
+        <field name="res_model">biblioteca_escolar.libro</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menú -->
+    <menuitem id="menu_biblioteca_root" name="Biblioteca escolar"/>
+    <menuitem id="menu_biblioteca_libros" name="Catálogo de libros"
+                parent="menu_biblioteca_root"
+                action="action_biblioteca_libro"/>
+
+</odoo>
