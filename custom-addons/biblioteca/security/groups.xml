@@ -1,16 +1,16 @@
 <odoo>
-    <record id="module_category_biblioteca" model="ir.module.category">
+    <record id="module_genero_biblioteca" model="ir.module.category">
         <field name="name">Biblioteca</field>
     </record>
 
     <record id="group_biblioteca_user" model="res.groups">
         <field name="name">Usuario Biblioteca</field>
-        <field name="category_id" ref="module_category_biblioteca"/>
+        <field name="genero_id" ref="module_genero_biblioteca"/>
     </record>
 
     <record id="group_biblioteca_manager" model="res.groups">
         <field name="name">Gestor Biblioteca</field>
-        <field name="category_id" ref="module_category_biblioteca"/>
+        <field name="genero_id" ref="module_genero_biblioteca"/>
         <field name="implied_ids" eval="[(4, ref('group_biblioteca_user'))]"/>
     </record>
 </odoo>
