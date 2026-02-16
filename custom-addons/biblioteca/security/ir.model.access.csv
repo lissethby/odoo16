@@ -1,2 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_biblioteca_biblioteca,biblioteca.biblioteca,model_biblioteca_biblioteca,base.group_user,1,1,1,1
+access_autor_user,autor.user,model_biblioteca_autor,group_biblioteca_user,1,1,1,0
+access_autor_manager,autor.manager,model_biblioteca_autor,group_biblioteca_manager,1,1,1,1
+access_genero_user,genero.user,model_biblioteca_genero,group_biblioteca_user,1,1,1,0
+access_genero_manager,genero.manager,model_biblioteca_genero,group_biblioteca_manager,1,1,1,1
+access_libro_user,libro.user,model_biblioteca_libro,group_biblioteca_user,1,1,1,0
+access_libro_manager,libro.manager,model_biblioteca_libro,group_biblioteca_manager,1,1,1,1
+access_prestamo_user,prestamo.user,model_biblioteca_prestamo,group_biblioteca_user,1,1,1,0
+access_prestamo_manager,prestamo.manager,model_biblioteca_prestamo,group_biblioteca_manager,1,1,1,1
+access_autlibro_user,autlibro.user,model_biblioteca_autor_libro,group_biblioteca_user,1,1,1,1

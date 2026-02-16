@@ -1,0 +1,47 @@
+<odoo>
+    <record id="view_autor_tree" model="ir.ui.view">
+        <field name="name">biblioteca.autor.tree</field>
+        <field name="model">biblioteca.autor</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="nacionalidad"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_autor_form" model="ir.ui.view">
+        <field name="name">biblioteca.autor.form</field>
+        <field name="model">biblioteca.autor</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="nacionalidad"/>
+                    </group>
+                    <group string="Biografía">
+                        <field name="biografia" nolabel="1" placeholder="Escribe aquí la biografía..."/>
+                    </group>
+                    <notebook>
+                        <page string="Libros del Autor">
+                            <field name="libro_autor_ids">
+                                <tree>
+                                    <field name="libro_id"/>
+                                    <field name="es_autor_principal"/>
+                                    <field name="orden"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_biblioteca_autor" model="ir.actions.act_window">
+        <field name="name">Autores</field>
+        <field name="res_model">biblioteca.autor</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

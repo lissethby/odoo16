@@ -1,0 +1,42 @@
+<odoo>
+    <record id="view_genero_tree" model="ir.ui.view">
+        <field name="name">biblioteca.genero.tree</field>
+        <field name="model">biblioteca.genero</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_genero_form" model="ir.ui.view">
+        <field name="name">biblioteca.genero.form</field>
+        <field name="model">biblioteca.genero</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group string="Descripción">
+                        <field name="descripcion" nolabel="1"/>
+                    </group>
+                    <group string="Libros en este género">
+                        <field name="libro_ids" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="estado"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_biblioteca_genero" model="ir.actions.act_window">
+        <field name="name">Géneros</field>
+        <field name="res_model">biblioteca.genero</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
