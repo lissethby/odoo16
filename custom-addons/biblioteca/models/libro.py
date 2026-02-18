@@ -1,52 +1,55 @@
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
-class BibliotecaLibro(models.Model):
+class Libro(models.Model):
     _name = 'biblioteca.libro'
-    _description = 'Libro de la Biblioteca'
-    # El _rec_name es 'name' por defecto, pero lo definimos por claridad
-    _rec_name = 'name'
+    _description = 'Libro de la biblioteca'
 
-    # --- Campos Obligatorios ---
-    name = fields.Char(string='Título del Libro', required=True)
-    isbn = fields.Char(string='ISBN', required=True, help="Código ISBN del libro")
+    # Campos Obligatorios según la tabla del profesor
+    name = fields.Char('Título', required=True)
+    isbn = fields.Char('ISBN', size=13, required=True)
+    editorial = fields.Char(string='Editorial')
+    ano_publicacion = fields.Integer('Año de publicación')
+    fecha_adquisicion = fields.Date('Fecha de compra')
+    precio = fields.Float('Precio de adquisición')
+    descripcion = fields.Text('Sinopsis o resumen')
+    active = fields.Boolean('Activo', default=True)
+    
+    # Tu mejora personal
+    foto = fields.Binary(string="Portada") 
 
-    # --- Relaciones ---
-    # Relación con tabla intermedia (One2many hacia la tabla que une libro y autor)
+    # Relaciones (Tipos determinados)
     autor_libro_ids = fields.One2many(
-        'biblioteca.autor_libro', 
-        'libro_id', 
+        comodel_name='biblioteca.autor_libro', 
+        inverse_name='libro_id',
         string='Autores'
     )
-
-    # Many2many simple: Odoo creará la tabla relacional automáticamente
+    
     genero_ids = fields.Many2many(
-        'biblioteca.genero', 
+        comodel_name='biblioteca.genero',
         string='Géneros'
     )
-
-    # Relación inversa con préstamos (un libro puede tener muchos préstamos)
+    
     prestamo_ids = fields.One2many(
-        'biblioteca.prestamo', 
-        'libro_id', 
-        string='Historial de Préstamos'
+        comodel_name='biblioteca.prestamo',
+        inverse_name='libro_id',
+        string='Préstamos'   
     )
 
-    # --- Información Básica ---
-    editorial = fields.Char(string='Editorial')
-    ano_publicacion = fields.Integer(string='Año de Publicación')
-    foto = fields.Binary(string="Portada") 
-    
-    # --- Estado y Finanzas ---
-    estado = fields.Selection([
-        ('disponible', 'Disponible'),
-        ('prestado', 'Prestado'),
-        ('reparacion', 'En Reparación'),
-        ('perdido', 'Perdido')
-    ], string='Estado', default='disponible', copy=False, tracking=True)
-    
-    fecha_adquisicion = fields.Date(string='Fecha de Adquisición', default=fields.Date.context_today)
-    precio = fields.Float(string='Precio de Adquisición')
-    
-    # --- Otros ---
-    descripcion = fields.Text(string='Sinopsis o Resumen')
-    active = fields.Boolean(string='Activo', default=True) # Campo para archivar
+    estado = fields.Selection(
+        selection=[
+            ('disponible', 'Disponible'),
+            ('prestado',   'En préstamo'),
+            ('reparacion', 'En reparación'),
+            ('perdido',    'Perdido'),
+        ],
+        string='Estado', default='disponible', required=True
+    )
+
+    # Campo calculado para el total (opcional, pero recomendado)
+    total_prestamos = fields.Integer(string='Total Préstamos', compute='_compute_total_prestamos')
+
+    @api.depends('prestamo_ids')
+    def _compute_total_prestamos(self):
+        for record in self:
+            record.total_prestamos = len(record.prestamo_ids)

@@ -2,12 +2,10 @@
 <odoo>
     <data noupdate="1">
         <record id="seq_biblioteca_prestamo" model="ir.sequence">
-            <field name="name">Secuencia de Préstamos</field>
-            <field name="code">biblioteca.prestamo</field>
-            <field name="prefix">PREST/%(year)s/</field>
-            <field name="padding">4</field>
-            <field name="number_next">1</field>
-            <field name="number_increment">1</field>
+            <name>Secuencia de Préstamos</name>
+            <code>biblioteca.prestamo.seq</code>
+            <prefix>PREST/%(year)s/</prefix>
+            <padding>4</padding>
         </record>
     </data>
 </odoo>

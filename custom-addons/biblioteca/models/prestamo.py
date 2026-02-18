@@ -1,50 +1,64 @@
+# -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
-from datetime import date
+from odoo.exceptions import ValidationError, UserError
+from dateutil.relativedelta import relativedelta
 
-class BibliotecaPrestamo(models.Model):
+class Prestamo(models.Model):
     _name = 'biblioteca.prestamo'
-    _description = 'Préstamos de Libros'
-    _order = 'name desc'
+    _description = 'Registro de Préstamos'
 
-    # Campos del modelo
-    name = fields.Char(string='Código de Préstamo', required=True, copy=False, readonly=True, default=lambda self: _('Nuevo'))
+    name = fields.Char(string='Código', required=True, readonly=True, copy=False, default='Nuevo')
     libro_id = fields.Many2one('biblioteca.libro', string='Libro', required=True)
     socio_id = fields.Many2one('res.partner', string='Socio', required=True)
     
-    fecha_prestamo = fields.Date(string='Fecha de Préstamo', default=fields.Date.context_today, required=True)
-    fecha_devolucion_prevista = fields.Date(string='Fecha Prevista Devolución', required=True)
-    fecha_devolucion_real = fields.Date(string='Fecha Real Devolución', readonly=True)
+    fecha_prestamo = fields.Date(string='Fecha Préstamo', default=fields.Date.today, required=True)
+    fecha_devolucion_prevista = fields.Date(
+        string='Devolución Prevista', 
+        required=True,
+        default=lambda self: fields.Date.today() + relativedelta(weeks=2)
+    )
+    fecha_devolucion_real = fields.Date(string='Devolución Real', readonly=True)
     
     estado = fields.Selection([
         ('activo', 'Activo'),
         ('devuelto', 'Devuelto'),
-        ('retrasado', 'Retrasado')
+        ('retrasado', 'Retrasado'),
     ], string='Estado', default='activo', required=True)
     
     notas = fields.Text(string='Observaciones')
 
-    # --- Lógica de Negocio ---
-
-    @api.model
-    def create(self, vals):
-        # 1. Gestionar la secuencia
-        if vals.get('name', _('Nuevo')) == _('Nuevo'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('biblioteca.prestamo') or _('Nuevo')
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'Nuevo') == 'Nuevo':
+                vals['name'] = self.env['ir.sequence'].next_by_code('biblioteca.prestamo.seq') or 'Nuevo'
         
-        # 2. Crear el registro
-        record = super(BibliotecaPrestamo, self).create(vals)
-        
-        # 3. Cambiar el estado del libro a 'prestado' automáticamente
-        if record.libro_id:
-            record.libro_id.estado = 'prestado'
-            
-        return record
+        prestamos = super(Prestamo, self).create(vals_list)
+        for p in prestamos:
+            if p.libro_id:
+                # Cambiamos el estado del libro a prestado
+                p.libro_id.write({'estado': 'prestado'})
+        return prestamos
 
     def action_devolver(self):
-        """Método para registrar la devolución desde un botón en la vista"""
-        for rec in self:
-            rec.estado = 'devuelto'
-            rec.fecha_devolucion_real = fields.Date.today()
-            # Al devolver, el libro vuelve a estar disponible
-            if rec.libro_id:
-                rec.libro_id.estado = 'disponible'
+        for record in self:
+            record.write({
+                'estado': 'devuelto',
+                'fecha_devolucion_real': fields.Date.today()
+            })
+            if record.libro_id:
+                # Cambiamos el estado del libro a disponible
+                record.libro_id.write({'estado': 'disponible'})
+
+    # --- NUEVA FUNCIÓN PARA EL CRON ---
+    @api.model
+    def _cron_actualizar_retrasados(self):
+        """Esta es la función que llama el archivo biblioteca_cron.xml"""
+        hoy = fields.Date.today()
+        # Buscamos préstamos activos cuya fecha prevista sea anterior a hoy
+        prestamos_vencidos = self.search([
+            ('estado', '=', 'activo'),
+            ('fecha_devolucion_prevista', '<', hoy)
+        ])
+        if prestamos_vencidos:
+            prestamos_vencidos.write({'estado': 'retrasado'})

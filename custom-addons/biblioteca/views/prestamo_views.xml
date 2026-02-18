@@ -4,7 +4,7 @@
         <field name="name">biblioteca.prestamo.tree</field>
         <field name="model">biblioteca.prestamo</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="estado == 'retrasado'" decoration-success="estado == 'devuelto'">
+            <tree decoration-info="estado == 'activo'" decoration-success="estado == 'devuelto'" decoration-danger="estado == 'retrasado'">
                 <field name="name"/>
                 <field name="libro_id"/>
                 <field name="socio_id"/>
@@ -23,27 +23,36 @@
         <field name="model">biblioteca.prestamo</field>
         <field name="arch" type="xml">
             <form>
+                <field name="estado" invisible="1"/>
+
                 <header>
+                    <button name="action_devolver" 
+                            string="Devolver Libro" 
+                            type="object" 
+                            class="oe_highlight" 
+                            invisible="estado != 'activo'"/>
+                    
                     <field name="estado" widget="statusbar" statusbar_visible="activo,devuelto,retrasado"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
+                        <label for="name"/>
                         <h1><field name="name"/></h1>
                     </div>
                     <group>
                         <group string="Información del Préstamo">
-                            <field name="libro_id"/>
-                            <field name="socio_id"/>
+                            <field name="libro_id" readonly="estado == 'devuelto'"/>
+                            <field name="socio_id" readonly="estado == 'devuelto'"/>
                         </group>
-                        <group string="Fechas">
-                            <field name="fecha_prestamo"/>
-                            <field name="fecha_devolucion_prevista"/>
-                            <field name="fecha_devolucion_real" attrs="{'invisible': [('fecha_devolucion_real', '=', False)]}"/>
+                        <group string="Fechas y Plazos">
+                            <field name="fecha_prestamo" readonly="estado == 'devuelto'"/>
+                            <field name="fecha_devolucion_prevista" readonly="estado == 'devuelto'"/>
+                            <field name="fecha_devolucion_real"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Notas">
-                            <field name="notas" placeholder="Observaciones del préstamo..."/>
+                            <field name="notas" placeholder="Escribe aquí cualquier observación sobre el estado del libro..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -57,7 +66,7 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Registra el primer préstamo de un libro.
+                Registra el primer préstamo de la biblioteca.
             </p>
         </field>
     </record>
