@@ -30,29 +30,29 @@
                             string="Devolver Libro" 
                             type="object" 
                             class="oe_highlight" 
-                            invisible="estado != 'activo'"/>
+                            attrs="{'invisible': [('estado', '!=', 'activo')]}"/>
                     
                     <field name="estado" widget="statusbar" statusbar_visible="activo,devuelto,retrasado"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="name"/>
-                        <h1><field name="name"/></h1>
+                        <h1><field name="name" readonly="1"/></h1>
                     </div>
                     <group>
                         <group string="Información del Préstamo">
-                            <field name="libro_id" readonly="estado == 'devuelto'"/>
-                            <field name="socio_id" readonly="estado == 'devuelto'"/>
+                            <field name="libro_id" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
+                            <field name="socio_id" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
                         </group>
                         <group string="Fechas y Plazos">
-                            <field name="fecha_prestamo" readonly="estado == 'devuelto'"/>
-                            <field name="fecha_devolucion_prevista" readonly="estado == 'devuelto'"/>
-                            <field name="fecha_devolucion_real"/>
+                            <field name="fecha_prestamo" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
+                            <field name="fecha_devolucion_prevista" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
+                            <field name="fecha_devolucion_real" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Notas">
-                            <field name="notas" placeholder="Escribe aquí cualquier observación sobre el estado del libro..."/>
+                            <field name="notas" placeholder="Escribe aquí cualquier observación..."/>
                         </page>
                     </notebook>
                 </sheet>

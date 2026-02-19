@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="action_biblioteca_socios" model="ir.actions.act_window">
-            <field name="name">Socios</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_mode">kanban,tree,form</field>
-        </record>
+    <record id="action_biblioteca_socios" model="ir.actions.act_window">
+        <field name="name">Socios</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
 
-        <menuitem id="menu_biblioteca_root" 
-                  name="Biblioteca" 
-                  sequence="10"/>
+    <menuitem id="menu_biblioteca_root" 
+              name="Biblioteca" 
+              sequence="10"/>
 
-        <menuitem id="menu_biblioteca_libros" 
-                  name="Libros" 
-                  parent="menu_biblioteca_root" 
-                  action="action_biblioteca_libro" 
-                  sequence="10"/>
+    <menuitem id="menu_biblioteca_libros" 
+              name="Libros" 
+              parent="menu_biblioteca_root" 
+              action="action_biblioteca_libro" 
+              sequence="10"/>
 
-        <menuitem id="menu_biblioteca_prestamos" 
-                  name="Préstamos" 
-                  parent="menu_biblioteca_root" 
-                  action="action_biblioteca_prestamo" 
-                  sequence="20"/>
+    <menuitem id="menu_biblioteca_prestamos" 
+              name="Préstamos" 
+              parent="menu_biblioteca_root" 
+              action="action_biblioteca_prestamo" 
+              sequence="20"/>
 
-        <menuitem id="menu_biblioteca_socios"
-                  name="Socios"
-                  parent="menu_biblioteca_root"
-                  action="action_biblioteca_socios"
-                  sequence="25"/>
+    <menuitem id="menu_biblioteca_socios"
+              name="Socios"
+              parent="menu_biblioteca_root"
+              action="action_biblioteca_socios"
+              sequence="25"/>
 
-        <menuitem id="menu_biblioteca_autores" 
-                  name="Autores" 
-                  parent="menu_biblioteca_root" 
-                  action="action_biblioteca_autor" 
-                  sequence="30"/>
-    </data>
+    <menuitem id="menu_biblioteca_autores" 
+              name="Autores" 
+              parent="menu_biblioteca_root" 
+              action="action_biblioteca_autor" 
+              sequence="30"/>
+
+    <menuitem id="menu_biblioteca_generos" 
+              name="Géneros" 
+              parent="menu_biblioteca_root" 
+              action="action_biblioteca_genero" 
+              sequence="40"/>
 </odoo>

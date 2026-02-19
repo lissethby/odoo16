@@ -9,7 +9,7 @@
                 <field name="foto"/>
                 <field name="name"/>
                 <field name="estado"/>
-                <field name="autorlibro_ids"/> 
+                <field name="autor_libro_ids"/> 
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click" style="width: 200px; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; background-color: white;">
@@ -27,7 +27,7 @@
                                     <field name="name"/>
                                 </div>
                                 <div style="font-size: 0.9em; color: #666; margin-bottom: 8px;">
-                                    <field name="autorlibro_ids" widget="many2many_tags"/>
+                                    <field name="autor_libro_ids" widget="many2many_tags"/>
                                 </div>
                                 <div>
                                     <field name="estado" widget="label_selection" options="{'classes': {'disponible': 'success', 'prestado': 'info', 'reparacion': 'warning', 'perdido': 'danger'}}"/>
@@ -66,12 +66,10 @@
                 <sheet>
                     <field name="active" invisible="1"/>
                     <field name="foto" widget="image" class="oe_avatar" options='{"preview_image": "foto"}'/>
-                    
                     <div class="oe_title">
                         <label for="name" string="Título del Libro"/>
                         <h1><field name="name" placeholder="Ej. Cien años de soledad"/></h1>
                     </div>
-
                     <notebook>
                         <page string="Información General">
                             <group>
@@ -85,16 +83,14 @@
                                 </group>
                             </group>
                         </page>
-
                         <page string="Autores">
-                            <field name="autorlibro_ids">
+                            <field name="autor_libro_ids">
                                 <tree editable="bottom">
                                     <field name="autor_id"/>
                                     <field name="es_autor_principal"/>
                                 </tree>
                             </field>
                         </page>
-
                         <page string="Gestión y Detalles">
                             <group>
                                 <group string="Editorial y Adquisición">
@@ -110,16 +106,37 @@
                             <separator string="Sinopsis"/>
                             <field name="descripcion" placeholder="Resumen del libro..."/>
                         </page>
-
-                        <page string="Historial de Préstamos">
+                       <page string="Historial de Préstamos">
+                            <group>
+                                <field name="total_prestamos" string="Total de veces prestado" readonly="1"/>
+                            </group>
+                            
                             <field name="prestamo_ids" readonly="1">
                                 <tree>
                                     <field name="name" string="Código"/>
                                     <field name="socio_id"/>
                                     <field name="fecha_prestamo"/>
-                                    <field name="estado"/>
+                                    <field name="estado" widget="badge" 
+                                        decoration-info="estado == 'activo'" 
+                                        decoration-success="estado == 'devuelto'"
+                                        decoration-danger="estado == 'retrasado'"/>
                                 </tree>
                             </field>
                         </page>
                     </notebook>
                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_biblioteca_libro" model="ir.actions.act_window">
+        <field name="name">Libros</field>
+        <field name="res_model">biblioteca.libro</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea el primer libro en tu biblioteca.
+            </p>
+        </field>
+    </record>
+</odoo>
