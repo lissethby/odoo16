@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from datetime import datetime
 
 class Libro(models.Model):
     _name = 'biblioteca.libro'
@@ -53,3 +55,13 @@ class Libro(models.Model):
     def _compute_total_prestamos(self):
         for record in self:
             record.total_prestamos = len(record.prestamo_ids)
+        
+    @api.constrains('ano_publicacion')
+    def _check_ano_publicacion(self):
+        current_year = datetime.now().year
+        for record in self:
+            if record.ano_publicacion > current_year:
+                raise ValidationError(
+                    f"El año de publicación ({record.ano_publicacion}) "
+                    f"no puede ser mayor que el año actual ({current_year})."
+                )

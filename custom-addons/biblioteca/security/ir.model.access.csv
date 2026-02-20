@@ -9,3 +9,5 @@ access_prestamo_user,prestamo.user,model_biblioteca_prestamo,biblioteca.group_bi
 access_prestamo_manager,prestamo.manager,model_biblioteca_prestamo,biblioteca.group_biblioteca_manager,1,1,1,1
 access_autlibro_user,autlibro.user,model_biblioteca_autor_libro,biblioteca.group_biblioteca_user,1,0,0,0
 access_autlibro_manager,autlibro.manager,model_biblioteca_autor_libro,biblioteca.group_biblioteca_manager,1,1,1,1
+access_partner_user,partner.user,base.model_res_partner,biblioteca.group_biblioteca_user,1,1,1,0
+access_partner_manager,partner.manager,base.model_res_partner,biblioteca.group_biblioteca_manager,1,1,1,1

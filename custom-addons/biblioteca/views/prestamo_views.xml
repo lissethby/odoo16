@@ -24,7 +24,6 @@
         <field name="arch" type="xml">
             <form>
                 <field name="estado" invisible="1"/>
-
                 <header>
                     <button name="action_devolver" 
                             string="Devolver Libro" 
@@ -41,12 +40,17 @@
                     </div>
                     <group>
                         <group string="Información del Préstamo">
-                            <field name="libro_id" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
-                            <field name="socio_id" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
+                            <field name="libro_id" 
+                                   domain="[('estado', '=', 'disponible')]"
+                                   attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
+                            <field name="socio_id" 
+                                   attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
                         </group>
                         <group string="Fechas y Plazos">
-                            <field name="fecha_prestamo" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
-                            <field name="fecha_devolucion_prevista" attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
+                            <field name="fecha_prestamo" 
+                                   attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
+                            <field name="fecha_devolucion_prevista" 
+                                   attrs="{'readonly': [('estado', '=', 'devuelto')]}"/>
                             <field name="fecha_devolucion_real" readonly="1"/>
                         </group>
                     </group>
@@ -64,10 +68,5 @@
         <field name="name">Préstamos</field>
         <field name="res_model">biblioteca.prestamo</field>
         <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Registra el primer préstamo de la biblioteca.
-            </p>
-        </field>
     </record>
 </odoo>

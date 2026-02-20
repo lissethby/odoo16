@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_biblioteca_autor_libro_tree" model="ir.ui.view">
+        <field name="name">biblioteca.autor_libro.tree</field>
+        <field name="model">biblioteca.autor_libro</field>
+        <field name="arch" type="xml">
+            <tree string="Relación Autor-Libro" editable="bottom" decoration-info="es_autor_principal == True">
+                <field name="orden" widget="handle"/>
+                <field name="autor_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="libro_id" invisible="1"/> <field name="es_autor_principal"/>
+                <field name="display_name" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_biblioteca_autor_libro_form" model="ir.ui.view">
+        <field name="name">biblioteca.autor_libro.form</field>
+        <field name="model">biblioteca.autor_libro</field>
+        <field name="arch" type="xml">
+            <form string="Detalle de Autoría">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="autor_id"/>
+                            <field name="libro_id"/>
+                        </group>
+                        <group>
+                            <field name="es_autor_principal"/>
+                            <field name="orden"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
 
 class Prestamo(models.Model):
@@ -30,15 +30,22 @@ class Prestamo(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            # 1. Gestión de Secuencia
             if vals.get('name', 'Nuevo') == 'Nuevo':
-                vals['name'] = self.env['ir.sequence'].next_by_code('biblioteca.prestamo.seq') or 'Nuevo'
+                codigo = self.env['ir.sequence'].next_by_code('biblioteca.prestamo.seq')
+                vals['name'] = codigo or 'ERROR-SEQ'
         
-        prestamos = super(Prestamo, self).create(vals_list)
-        for p in prestamos:
-            if p.libro_id:
-                # Cambiamos el estado del libro a prestado
-                p.libro_id.write({'estado': 'prestado'})
-        return prestamos
+        # 2. Crear los registros
+        records = super(Prestamo, self).create(vals_list)
+        
+        # 3. CAMBIAR ESTADO DEL LIBRO A PRESTADO (Esto es lo que faltaba)
+        for rec in records:
+            if rec.libro_id:
+                if rec.libro_id.estado != 'disponible':
+                    raise ValidationError(f"El libro {rec.libro_id.titulo} ya está prestado.")
+                rec.libro_id.write({'estado': 'prestado'})
+        
+        return records
 
     def action_devolver(self):
         for record in self:
@@ -50,15 +57,20 @@ class Prestamo(models.Model):
                 # Cambiamos el estado del libro a disponible
                 record.libro_id.write({'estado': 'disponible'})
 
-    # --- NUEVA FUNCIÓN PARA EL CRON ---
     @api.model
     def _cron_actualizar_retrasados(self):
-        """Esta es la función que llama el archivo biblioteca_cron.xml"""
         hoy = fields.Date.today()
-        # Buscamos préstamos activos cuya fecha prevista sea anterior a hoy
         prestamos_vencidos = self.search([
             ('estado', '=', 'activo'),
             ('fecha_devolucion_prevista', '<', hoy)
         ])
         if prestamos_vencidos:
             prestamos_vencidos.write({'estado': 'retrasado'})
+
+    @api.constrains('fecha_prestamo', 'fecha_devolucion_prevista')
+    def _check_fechas_logicas(self):
+        for record in self:
+            # Verificamos que ambas fechas existan antes de comparar
+            if record.fecha_prestamo and record.fecha_devolucion_prevista:
+                if record.fecha_devolucion_prevista < record.fecha_prestamo:
+                    raise ValidationError("La fecha de devolución debe ser posterior a la fecha de préstamo.")
