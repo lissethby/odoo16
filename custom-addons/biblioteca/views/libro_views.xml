@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Vista de Kanban (Kanban) -->
     <record id="view_libro_kanban" model="ir.ui.view">
         <field name="name">biblioteca.libro.kanban</field>
         <field name="model">biblioteca.libro</field>
@@ -40,6 +41,7 @@
         </field>
     </record>
 
+    <!-- Vista de lista (tree) -->
     <record id="view_libro_tree" model="ir.ui.view">
         <field name="name">biblioteca.libro.tree</field>
         <field name="model">biblioteca.libro</field>
@@ -58,6 +60,7 @@
         </field>
     </record>
 
+    <!-- Vista de formulario -->
     <record id="view_libro_form" model="ir.ui.view">
         <field name="name">biblioteca.libro.form</field>
         <field name="model">biblioteca.libro</field>

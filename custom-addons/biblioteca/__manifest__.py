@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Gestión de Biblioteca',
-    'version': '16.0.0.1.0',
+    'version': '16.0.1.0.0',
     'summary': 'Módulo para gestión de libros, autores y préstamos',
     'author': 'Lisseth Bentura',
     'category': 'Tools',

@@ -1,0 +1,81 @@
+📚 Gestión de Biblioteca - Odoo 16
+Este módulo ha sido desarrollado para automatizar la gestión de una biblioteca, permitiendo el control de existencias, autores, categorías y el flujo completo de préstamos a socios.
+
+🚀 Funcionalidades Implementadas
+Core (Obligatorio)
+Gestión de Libros: Ficha técnica con título, ISBN y disponibilidad.
+
+Autores: Registro detallado de escritores.
+
+Géneros: Categorización de libros.
+
+Gestión de Socios (Herencia): Se ha extendido el modelo nativo res.partner para añadir funcionalidad de socio sin duplicar la base de datos de contactos de Odoo.
+
+Préstamos: Registro de préstamos con estados (Borrador, Activo, Devuelto).
+
+Seguridad: Implementación de grupos de acceso (Lector y Bibliotecario) con permisos específicos vía CSV.
+
+Opcionales / Plus
+Interfaz Dinámica: Uso de boolean_toggle y visibilidad condicional (invisible) en la ficha de contactos.
+
+Identificadores Automáticos: Secuencias para folios de préstamos (P0001, P0002).
+
+Vistas Avanzadas: Uso de kanban para libros y badges de colores para estados.
+
+🛠️ Instrucciones de Instalación
+Extraer el archivo apellido_nombre_biblioteca.zip.
+
+Copiar la carpeta biblioteca dentro del directorio de addons de su instancia de Odoo 16.
+
+Reiniciar el servidor de Odoo.
+
+Activar el Modo Desarrollador en Ajustes.
+
+Ir al menú Aplicaciones y hacer clic en "Actualizar lista de aplicaciones".
+
+Buscar "Gestión de Biblioteca" e instalar.
+
+🧠 Decisiones de Diseño: Tabla Intermedia de AutoresSe ha optado por utilizar una tabla intermedia (biblioteca.autor.libro)
+ para gestionar la relación entre Libros y Autores por las siguientes razones:Relación Muchos a Muchos ($N:M$): Un libro puede ser escrito por varios autores y un autor 
+ puede haber escrito múltiples libros.Escalabilidad: El uso de una tabla intermedia permite, en un futuro, añadir campos adicionales a la relación (como por ejemplo,
+  si el autor fue el escritor principal, el co-autor o el ilustrador), algo que un campo Many2many simple no permite de forma tan limpia.
+  Normalización: Sigue las mejores prácticas de bases de datos relacionales para evitar la redundancia de datos.
+
+🔧 Problemas Encontrados y Soluciones
+Durante el desarrollo se presentó un bloqueo crítico:
+
+Problema: Error NameError: name 'es_socio_biblioteca' is not defined al intentar cargar la vista heredada de contactos.
+
+Causa: Odoo intentaba evaluar condiciones de visibilidad (invisible) sobre un campo que el cliente (navegador) aún no había cargado en el DOM de la vista.
+
+Solución: Se realizó una declaración primaria del campo al inicio del formulario con invisible="1". Esto permite que el motor de Odoo reconozca la variable 
+antes de usarla en lógicas condicionales. Además, se forzó la actualización por terminal mediante el comando -u para asegurar que el modelo de Python 
+se sincronizara con la base de datos.
+
+📁 Estructura del Módulo
+
+biblioteca/
+├── __init__.py
+├── __manifest__.py
+├── README.md
+├── data/
+│   ├── ir_sequence_data.xml
+│   └── biblioteca_cron.xml
+├── models/
+│   ├── autor.py
+│   ├── libro.py
+│   ├── prestamo.py
+│   └── res_partner.py
+├── security/
+│   ├── groups.xml
+│   └── ir.model.access.csv
+└── views/
+    ├── autor_views.xml
+    ├── libro_views.xml
+    ├── prestamo_views.xml
+    ├── res_partner_views.xml
+    └── menu.xml
+
+Autor
+Lisseth Bentura - Proyecto de Desarrollo Odoo 16.
+
