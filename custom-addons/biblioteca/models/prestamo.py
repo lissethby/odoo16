@@ -32,19 +32,22 @@ class Prestamo(models.Model):
         for vals in vals_list:
             # 1. Gestión de Secuencia
             if vals.get('name', 'Nuevo') == 'Nuevo':
-                codigo = self.env['ir.sequence'].next_by_code('biblioteca.prestamo.seq')
-                vals['name'] = codigo or 'ERROR-SEQ'
+                # Le pedimos permiso al administrador para avanzar el contador
+                codigo = self.env['ir.sequence'].sudo().next_by_code('biblioteca.prestamo.seq')
+                vals['name'] = codigo or 'Nuevo'
         
-        # 2. Crear los registros
+        # 2. Crear los registros (Llamada al padre)
         records = super(Prestamo, self).create(vals_list)
         
-        # 3. CAMBIAR ESTADO DEL LIBRO A PRESTADO (Esto es lo que faltaba)
+        # 3. Cambio de estado del libro
         for rec in records:
             if rec.libro_id:
                 if rec.libro_id.estado != 'disponible':
                     raise ValidationError(f"El libro {rec.libro_id.titulo} ya está prestado.")
+                
+                # pueda marcar el libro como prestado.
                 rec.libro_id.write({'estado': 'prestado'})
-        
+                
         return records
 
     def action_devolver(self):

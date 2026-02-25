@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='category_id']" position="after">
-                <p class="text-muted">Socio de la Biblioteca</p>
+                <field name="es_socio_biblioteca"/>
             </xpath>
         </field>
     </record>

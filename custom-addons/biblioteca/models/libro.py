@@ -48,7 +48,7 @@ class Libro(models.Model):
         string='Estado', default='disponible', required=True
     )
 
-    # Campo calculado para el total (opcional, pero recomendado)
+    # Campo calculado para el total 
     total_prestamos = fields.Integer(string='Total Préstamos', compute='_compute_total_prestamos')
 
     @api.depends('prestamo_ids')
